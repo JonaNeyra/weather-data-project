@@ -1,0 +1,6 @@
+twilio
+python-dotenv
+pandas
+requests
+beautifulsoup4
+tqdm
