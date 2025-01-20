@@ -1,0 +1,4 @@
+config:
+  aws:region: us-east-1
+  weather_api:instance_type: t2.micro
+  weather_api:ssh_key_name: weather-api
