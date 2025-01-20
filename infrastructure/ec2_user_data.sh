@@ -14,4 +14,4 @@ sudo cp -R /tmp/weather-data-project/weather_api /var/opt/weather_api
 sudo chown -R www-data:www-data /var/opt/weather_api
 
 docker build -t weather-api-image /var/opt/weather_api
-docker run -d weather-api-image
+docker run -it --name weather-container weather-api-image

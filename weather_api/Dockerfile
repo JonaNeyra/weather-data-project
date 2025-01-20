@@ -27,3 +27,5 @@ RUN python -m venv /py && \
 ENV PATH="/py/bin/:$PATH"
 
 USER ritual-user
+
+CMD ["tail", "-f", "/dev/null"]
