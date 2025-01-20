@@ -2,11 +2,11 @@ import os
 
 from dotenv import load_dotenv
 
-from weather_api.src.send_forecast.app.send_forecast_use_case import SendForecastUseCase
-from weather_api.src.send_forecast.domain.service_entities import Recipient, Location
-from weather_api.src.send_forecast.infrastructure.sms_twilio_messanger import SMSTwilioMessanger
-from weather_api.src.send_forecast.services.forecast_twlio_sender import ForecastTwilioSender
-from weather_api.src.send_forecast.services.generate_forecast_message_from import GenerateForecastMessageFrom
+from send_forecast.app.send_forecast_use_case import SendForecastUseCase
+from send_forecast.domain.service_entities import Recipient, Location
+from send_forecast.infrastructure.sms_twilio_messanger import SMSTwilioMessanger
+from send_forecast.services.forecast_twlio_sender import ForecastTwilioSender
+from send_forecast.services.generate_forecast_message_from import GenerateForecastMessageFrom
 
 load_dotenv()
 
