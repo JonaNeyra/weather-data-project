@@ -4,7 +4,7 @@ import boto3
 
 class SsmHandler:
     def __init__(self, param_lists, region_name=None):
-        self.smm_client = boto3.client('ssm', region_name=region_name or 'east-us-1')
+        self.smm_client = boto3.client('ssm', region_name=region_name or 'us-east-1')
         self.param_lists = param_lists
 
     def perform(self):

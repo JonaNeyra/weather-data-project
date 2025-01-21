@@ -11,7 +11,9 @@ from utils.ssm_handler import assign_project_env_vars
 
 load_dotenv()
 
-if os.environ['TWILIO_ACCOUNT_SID'] is None:
+twilio_account_sid = os.environ.get('TWILIO_ACCOUNT_SID', '')
+
+if twilio_account_sid == '':
     param_lists = {
         'to_decrypt': [
             ('/ec2/deployment/credentials/twilio-account-sid-param', 'TWILIO_ACCOUNT_SID'),

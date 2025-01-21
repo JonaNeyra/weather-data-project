@@ -21,7 +21,7 @@ twilio_auth_token = config.require_secret("TWILIO_AUTH_TOKEN") or ''
 twilio_auth_token_param = aws.ssm.Parameter(
     'twilio-auth-token-param',
     type="SecureString",
-    value=twilio_account_sid,
+    value=twilio_auth_token,
     name='/ec2/deployment/credentials/twilio-auth-token-param'
 )
 
@@ -29,7 +29,7 @@ twilio_phone_number = config.require_secret("TWILIO_PHONE_NUMBER") or ''
 twilio_phone_number_param = aws.ssm.Parameter(
     'twilio-phone-number-param',
     type="SecureString",
-    value=twilio_account_sid,
+    value=twilio_phone_number,
     name='/ec2/deployment/values/twilio-phone-number-param'
 )
 
@@ -37,7 +37,7 @@ to_phone_number = config.require("TO_PHONE_NUMBER") or ''
 to_phone_number_param = aws.ssm.Parameter(
     'to-phone-number-param',
     type="String",
-    value=twilio_account_sid,
+    value=to_phone_number,
     name='/ec2/deployment/values/to-phone-number-param'
 )
 
@@ -46,7 +46,7 @@ weather_api_key = config.require_secret("API_KEY_WAPI") or ''
 weather_api_key_param = aws.ssm.Parameter(
     'weather-api-key-param',
     type="SecureString",
-    value=twilio_account_sid,
+    value=weather_api_key,
     name='/ec2/deployment/credentials/weather-api-key-param'
 )
 
