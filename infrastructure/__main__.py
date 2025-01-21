@@ -1,3 +1,5 @@
+import json
+
 import pulumi
 import pulumi_aws as aws
 from pulumi_docker_build  import DockerfileArgs, Image, BuildContextArgs
@@ -5,6 +7,49 @@ from pulumi_docker_build  import DockerfileArgs, Image, BuildContextArgs
 aws_config = pulumi.Config('aws')
 region = aws_config.require('region')
 config = pulumi.Config('weather_api')
+
+# TWILIO CONFIG
+twilio_account_sid = config.require_secret("TWILIO_ACCOUNT_SID") or ''
+twilio_account_sid_param = aws.ssm.Parameter(
+    'twilio-account-sid-param',
+    type="SecureString",
+    value=twilio_account_sid,
+    name='/ec2/deployment/credentials/twilio-account-sid-param'
+)
+
+twilio_auth_token = config.require_secret("TWILIO_AUTH_TOKEN") or ''
+twilio_auth_token_param = aws.ssm.Parameter(
+    'twilio-auth-token-param',
+    type="SecureString",
+    value=twilio_account_sid,
+    name='/ec2/deployment/credentials/twilio-auth-token-param'
+)
+
+twilio_phone_number = config.require_secret("TWILIO_PHONE_NUMBER") or ''
+twilio_phone_number_param = aws.ssm.Parameter(
+    'twilio-phone-number-param',
+    type="SecureString",
+    value=twilio_account_sid,
+    name='/ec2/deployment/values/twilio-phone-number-param'
+)
+
+to_phone_number = config.require("TO_PHONE_NUMBER") or ''
+to_phone_number_param = aws.ssm.Parameter(
+    'to-phone-number-param',
+    type="String",
+    value=twilio_account_sid,
+    name='/ec2/deployment/values/to-phone-number-param'
+)
+
+# WEATHER API CONFIG
+weather_api_key = config.require_secret("API_KEY_WAPI") or ''
+weather_api_key_param = aws.ssm.Parameter(
+    'weather-api-key-param',
+    type="SecureString",
+    value=twilio_account_sid,
+    name='/ec2/deployment/credentials/weather-api-key-param'
+)
+
 instance_type = config.get('instance_type') or 't2.micro'
 ssh_key_name = config.get('ssh_key_name')
 
@@ -50,6 +95,53 @@ docker_image = Image(
     push=False
 )
 
+ssm_policy = aws.iam.Policy(
+    "weather-api-ssm-policy",
+    description="Policy to allow access to SSM Parameter Store",
+    policy=json.dumps({
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Action": [
+                    "ssm:GetParameter",
+                    "ssm:GetParameters",
+                    "ssm:GetParametersByPath"
+                ],
+                "Resource": "*"
+            }
+        ]
+    })
+)
+
+weather_api_instance_role = aws.iam.Role(
+    "weather-api-instance-role",
+    assume_role_policy=json.dumps({
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Action": "sts:AssumeRole",
+                "Principal": {
+                    "Service": "ec2.amazonaws.com"
+                },
+                "Effect": "Allow",
+                "Sid": ""
+            }
+        ]
+    })
+)
+
+weather_api_role_policy_attachment = aws.iam.RolePolicyAttachment(
+    "weather-api-role-policy-attachment",
+    role=weather_api_instance_role.name,
+    policy_arn=ssm_policy.arn
+)
+
+weather_api_instance_profile = aws.iam.InstanceProfile(
+    "weather-api-instance-profile",
+    role=weather_api_instance_role.name
+)
+
 with open('ec2_user_data.sh', 'r') as user_data_file:
     user_data = user_data_file.read()
 
@@ -61,6 +153,7 @@ ec2_instance = aws.ec2.Instance(
     associate_public_ip_address=True,
     vpc_security_group_ids=[security_group.id],
     user_data=user_data,
+    iam_instance_profile=weather_api_instance_profile.name,
     root_block_device={
         "volumeSize": 8,
         "volumeType": "gp3",

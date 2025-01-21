@@ -2,3 +2,12 @@ config:
   aws:region: us-east-1
   weather_api:instance_type: t2.micro
   weather_api:ssh_key_name: weather-api
+  weather_api:TWILIO_ACCOUNT_SID:
+    secure: AAABAHjSQ3d7/KW2CXVDM1FNm4r6HklDVspfMKWI1HNKAABL5j/rZOOeKhemgPXH67DerNFSRsLIk/KgIz1lMc7B
+  weather_api:TWILIO_AUTH_TOKEN:
+    secure: AAABAMLfpWNhOT7VRK5vPXSGhNozHOQERSQAlXEw8RF6Fb/SKexhaGas7V7Gp9YOcFLd4Q9z99eYY7fy0drNdg==
+  weather_api:TWILIO_PHONE_NUMBER:
+    secure: AAABAN3Vzl7rMM0x+/jplQrxcmN1h/lNyTHA7cKziiKB8FjJ4iDl76vLBa4=
+  weather_api:API_KEY_WAPI:
+    secure: AAABAJcx4yzOtcTG4dJF58VtfcIv8nTPfFQqCSb8SYbdVU6rDghwrn+wxF/Cz8QY6YfhGJ5eaP4TmNyD/a60
+  weather_api:TO_PHONE_NUMBER: "+524271142484"
